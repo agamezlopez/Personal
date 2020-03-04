@@ -1,0 +1,224 @@
+TAG="telegram"
+
+logToken()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Token: $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logStatus()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , CCR: $3 seg , Motor: $4 seg , Nodo 1: $5 , Nodo 2: $6 , BD: $7"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logPlatform()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Nodo 1: $3 , Nodo 2: $4 , Motor: $5 , Motor QA: $6"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNegated()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Nodo 1: $3-$4, $5-$6, $7-$8 , Nodo 2: $9-${10}, ${11}-${12}, ${13}-${14}"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logWrong()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Comando errado"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logUptime()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logTx()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Nodo 1: $3 , Nodo 2: $4 , Motor: $5"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logCont1()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Aplicada Contencion Nodo 1: $3%"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logCont2()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Contencion Aplicada Nodo 2: $3%"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logContNodes()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Contencion Aplicada Nodos 1 y 2: $3%"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNoCont()
+{
+        MESSAGE="Usuario: $1 , Comando: $2 , Contencion retirada en ambos nodos"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNoCont1()
+{
+        MESSAGE="Usuario: $1 , Comando: $2 , Contencion retirada en Nodo 1"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNoCont2()
+{
+        MESSAGE="Usuario: $1 , Comando: $2 , Contencion retirada en Nodo 2"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logContStatus()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Contencion Nodo 1: $3% , Contencion Nodo 2: $4%"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNode1Start()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se Inicia PM2 en Nodo 1 - $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNode1Stop()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se Detiene PM2 en Nodo 1 - $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNode2Start()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se Inicia PM2 en Nodo 2 - $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNode2Stop()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se Detiene PM2 en Nodo 2 - $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNodesStart()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se intenta iniciar Nodo 1: $3 , Se intenta iniciar Nodo 2: $4"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logNodesStop()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se intenta detener Nodo 1: $3 , Se intenta detener Nodo 2: $4"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logQaStop()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se intenta detener Motor QA: $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logQaStart()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se intenta iniciar Motor QA: $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logEngineStart()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se intenta iniciar Motor: $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+logEngineStop()
+{
+
+        MESSAGE="Usuario: $1 , Comando: $2 , Se intenta detener Motor: $3"
+
+        logger -t $TAG $MESSAGE
+
+}
+
+#logGuide()
+#{
+
+#       MESSAGE="Usuario: $1 , Comando: $2 , - uptime:  Tiempo que el bot ha estado operativo - cont1_(%cont): Aplica contencion en nodo 1 - no.cont1: Quita contencion en nodo 1 - cont2_(%cont): Aplica contencion en nodo 2 - no.cont2: Quita contencion en nodo 2 - cont.nodes_(%cont): Aplica contencion en ambos nodos - no.cont.nodes: Quita contencion en ambos nodos - cont.status: Muestra estatus actual de contencion en nodos - node1.start: Inicia PM2 en nodo 1 - node1.stop: Detiene PM2 en nodo 1 - node2.start: Inicia PM2 en nodo 2 - node2.stop: Detiene PM2 en nodo 2 - nodes.start: Iniciar PM2 en ambos nodos - nodes.stop: Detener PM2 en ambos nodos - qa.start: Inicia motor de QA - qa.stop: Detiene motor QA - engine.start: Inicia motor de producción - engine.stop: Detiene motor de producción - status: Muestra estadistica actual de la plataforma (tiempos prom, bd) - platform: Muestra estatus operacional de plataforma (estatus nodos y motor) - negated: Muestra top 3 de Bancos negando en cada nodo (se actualiza cada 5 minutos) - log.status: Valida si nodos y motor estan transando"
+
+#       logger -t $TAG $MESSAGE
+
+#}
+
