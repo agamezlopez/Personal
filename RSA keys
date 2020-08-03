@@ -1,0 +1,7 @@
+comando para crear las llaves publicas y privadas
+
+ssh-keygen -b 4096 -t rsa
+
+comando para copiar la llave publica en el otro host
+
+ssh-copy-id accrapidpago@172.28.99.3
