@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 #id noc1: 707224929
@@ -10,6 +9,14 @@
 #id Lorena: 702450891
 
 #id Arlen: 468828628
+
+#id Yesenia: 1012303665
+
+#id Luis Ravelo: 706566309
+
+#id Hector: 714821206
+
+#id Alonso: 1039017724
 
 shopt -s expand_aliases
 
@@ -32,7 +39,11 @@ ENGINE="172.28.99.34"
 NODE1="172.28.111.42"
 NODE2="172.28.111.43"
 IP_BD="10.20.96.33"
-WIFI="172.28.99.11"
+WIFI="172.28.99.12"
+BOD_GW="172.28.111.48"
+BOD_MOTOR="172.28.111.49"
+LOG_BOD="/opt/bod/Gateway/tomcat8.5/logs/catalina.out"
+LOG_BOD_GF="/DATOS1/bod/Motor/glassfish4/glassfish/domains/domain1/logs/server.log"
 SW1="172.28.111.44"
 SW2="172.28.111.45"
 SSH="ssh -t -q agamez"
@@ -45,7 +56,7 @@ alias node1_start="$SSH@$NODE1 sudo pm2 start /opt/nodejs/api-gateway/bin/www �
 alias node2_stop="$SSH@$NODE2 sudo pm2 stop /opt/nodejs/api-gateway/bin/www –watch"
 alias node2_start="$SSH@$NODE2 sudo pm2 start /opt/nodejs/api-gateway/bin/www –watch"
 alias engine_stop="$SSH@$ENGINE sudo /home/accrapidpago/Documents/Motor/glassfish4/glassfish/bin/asadmin stop-domain"
-alias engine_start="$SSH@$ENGINE sudo /home/accrapidpago/Documents/Motor/glassfish4/glassfish/bin/asadmin start-domain"
+alias engine_start="$SSH@$ENGINE 'sudo nohup /home/accrapidpago/Documents/Motor/glassfish4/glassfish/bin/asadmin start-domain >/dev/null 2>&1'"
 alias engine_status="$SSH@$ENGINE sudo /home/accrapidpago/Documents/Motor/glassfish4/glassfish/bin/asadmin list-domains"
 alias qa_stop="sudo /opt/Motor/glassfish4/glassfish/bin/asadmin stop-domain"
 alias qa_start="sudo /opt/Motor/glassfish4/glassfish/bin/asadmin start-domain"
@@ -56,6 +67,13 @@ alias integrator1_stop="$SSH@$SW1 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh 
 alias integrator1_start="$SSH@$SW1 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh start"
 alias integrator2_stop="$SSH@$SW2 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh stop"
 alias integrator2_start="$SSH@$SW2 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh start"
+alias bod_stop="$SSH@$BOD_GW sudo /opt/bod/Gateway/tomcat8.5/bin/shutdown.sh"
+alias bod_start="$SSH@$BOD_GW sudo /opt/bod/Gateway/tomcat8.5/bin/startup.sh"
+alias bod_gf_status="$SSH@$BOD_MOTOR sudo /DATOS1/bod/Motor/glassfish4/bin/asadmin list-domains"
+alias bod_gf_stop="$SSH@$BOD_MOTOR sudo /DATOS1/bod/Motor/glassfish4/bin/asadmin stop-domain"
+alias bod_gf_start="$SSH@$BOD_MOTOR sudo nohup /DATOS1/bod/Motor/glassfish4/bin/asadmin start-domain >/dev/null 2>&1"
+alias wifi_stop="$SSH@$WIFI sudo /opt/Gateway/tomcat8.5/bin/shutdown.sh >/dev/null 2>&1"
+alias wifi_start="$SSH@$WIFI sudo /opt/Gateway/tomcat8.5/bin/startup.sh >/dev/null 2>&1"
 
 echo "$$" > $PATH_SCRIPT/pid_test.txt
 
@@ -207,7 +225,7 @@ commands()
                 guide)
 
                         $SEND"Lista de comandos:"
-                        $SEND" - uptime:  Tiempo que el bot ha estado operativo. $NEW_LINE $NEW_LINE - cont1_(%cont): Aplica contencion en nodo 1. $NEW_LINE $NEW_LINE - no.cont1: Quita contencion en nodo 1. $NEW_LINE $NEW_LINE - cont2_(%cont): Aplica contencion en nodo 2. $NEW_LINE $NEW_LINE - no.cont2: Quita contencion en nodo 2. $NEW_LINE $NEW_LINE - cont.nodes_(%cont): Aplica contencion en ambos nodos. $NEW_LINE $NEW_LINE - no.cont.nodes: Quita contencion en ambos nodos. $NEW_LINE $NEW_LINE - cont.status: Muestra estatus actual de contencion en nodos. $NEW_LINE $NEW_LINE - node1.start: Inicia PM2 en nodo 1. $NEW_LINE $NEW_LINE - node1.stop: Detiene PM2 en nodo 1. $NEW_LINE $NEW_LINE - node2.start: Inicia PM2 en nodo 2. $NEW_LINE $NEW_LINE - node2.stop: Detiene PM2 en nodo 2. $NEW_LINE $NEW_LINE - nodes.start: Iniciar PM2 en ambos nodos. $NEW_LINE $NEW_LINE - nodes.stop: Detener PM2 en ambos nodos. $NEW_LINE $NEW_LINE - qa.start: Inicia motor de QA. $NEW_LINE $NEW_LINE- qa.stop: Detiene motor QA. $NEW_LINE $NEW_LINE - engine.start: Inicia motor de producción. $NEW_LINE $NEW_LINE - engine.stop: Detiene motor de producción. $NEW_LINE $NEW_LINE - status: Muestra estadistica actual de la plataforma (tiempos prom, bd). $NEW_LINE $NEW_LINE - platform: Muestra estatus operacional de plataforma (estatus nodos y motor). $NEW_LINE $NEW_LINE - tx: Valida si nodos y motor estan transando. $NEW_LINE $NEW_LINE - dispo: Valida si los servers estan operativos y desde cuando $NEW_LINE $NEW_LINE - port: Realiza e indica estatus de conexion telnet hacia los puertos 5020 (CCR) y 4546 (HSM) $NEW_LINE $NEW_LINE - wifi: Arroja hora y fecha de la ultima tx registrada en log de POS wifi. $NEW_LINE $NEW_LINE - sw1.stop: Detiene el wso2 del Sw1. $NEW_LINE $NEW_LINE - sw1.start: Inicia el wso2 de sw1. $NEW_LINE $NEW_LINE - sw2.stop: Detiene el wso2 del Sw2. $NEW_LINE $NEW_LINE - sw2.start: Inicia el wso2 de sw2. $NEW_LINE $NEW_LINE - line1.stop: Detiene pm2 del nodo 1 y wso2 del sw 1. $NEW_LINE $NEW_LINE - line1.start: Inicia pm2 del nodo 1 y wso2 del sw 1. $NEW_LINE $NEW_LINE - line2.stop: Detiene pm2 del nodo 2 y wso2 del sw 2. $NEW_LINE $NEW_LINE - line2.start: Inicia pm2 del nodo 2 y wso2 del sw 2. $NEW_LINE $NEW_LINE - wso2.stop: Detiene wso2 de ambos Sw. $NEW_LINE $NEW_LINE - wso2.start: Inicia wso2 de ambos Sw."
+                        $SEND" - uptime:  Tiempo que el bot ha estado operativo. $NEW_LINE $NEW_LINE - cont1_(%cont): Aplica contencion en nodo 1. $NEW_LINE $NEW_LINE - no.cont1: Quita contencion en nodo 1. $NEW_LINE $NEW_LINE - cont2_(%cont): Aplica contencion en nodo 2. $NEW_LINE $NEW_LINE - no.cont2: Quita contencion en nodo 2. $NEW_LINE $NEW_LINE - cont.nodes_(%cont): Aplica contencion en ambos nodos. $NEW_LINE $NEW_LINE - no.cont.nodes: Quita contencion en ambos nodos. $NEW_LINE $NEW_LINE - cont.status: Muestra estatus actual de contencion en nodos. $NEW_LINE $NEW_LINE - node1.start: Inicia PM2 en nodo 1. $NEW_LINE $NEW_LINE - node1.stop: Detiene PM2 en nodo 1. $NEW_LINE $NEW_LINE - node2.start: Inicia PM2 en nodo 2. $NEW_LINE $NEW_LINE - node2.stop: Detiene PM2 en nodo 2. $NEW_LINE $NEW_LINE - nodes.start: Iniciar PM2 en ambos nodos. $NEW_LINE $NEW_LINE - nodes.stop: Detener PM2 en ambos nodos. $NEW_LINE $NEW_LINE - qa.start: Inicia motor de QA. $NEW_LINE $NEW_LINE- qa.stop: Detiene motor QA. $NEW_LINE $NEW_LINE - status: Muestra estadistica actual de la plataforma (tiempos prom, bd). $NEW_LINE $NEW_LINE - platform: Muestra estatus operacional de plataforma (estatus nodos y motor). $NEW_LINE $NEW_LINE - tx: Valida si nodos y motor estan transando. $NEW_LINE $NEW_LINE - dispo: Valida si los servers estan operativos y desde cuando $NEW_LINE $NEW_LINE - port: Realiza e indica estatus de conexion telnet hacia los puertos 5020 (CCR) y 4546 (HSM) $NEW_LINE $NEW_LINE - wifi: Arroja hora y fecha de la ultima tx registrada en log de POS wifi. $NEW_LINE $NEW_LINE - sw1.stop: Detiene el wso2 del Sw1. $NEW_LINE $NEW_LINE - sw1.start: Inicia el wso2 de sw1. $NEW_LINE $NEW_LINE - sw2.stop: Detiene el wso2 del Sw2. $NEW_LINE $NEW_LINE - sw2.start: Inicia el wso2 de sw2. $NEW_LINE $NEW_LINE - line1.stop: Detiene pm2 del nodo 1 y wso2 del sw 1. $NEW_LINE $NEW_LINE - line1.start: Inicia pm2 del nodo 1 y wso2 del sw 1. $NEW_LINE $NEW_LINE - line2.stop: Detiene pm2 del nodo 2 y wso2 del sw 2. $NEW_LINE $NEW_LINE - line2.start: Inicia pm2 del nodo 2 y wso2 del sw 2. $NEW_LINE $NEW_LINE - wso2.stop: Detiene wso2 de ambos Sw. $NEW_LINE $NEW_LINE - wso2.start: Inicia wso2 de ambos Sw. $NEW_LINE $NEW_LINE - consult_(dia): Consulta y muestra las transacciones registradasen el dia especificado, esto en ambos nodos del gw. $NEW_LINE $NEW_LINE - bod.status: Muestra estadisticas actuales de los POS BOD (tiempos promedios). $NEW_LINE $NEW_LINE - bod.tx: Valida si GW BOD esta trasando y si el motor esta activo. $NEW_LINE $NEW_LINE - bod.platform: Valida estatus operativo de los aplicativos. $NEW_LINE $NEW_LINE - bod.stop (no probado): Detiene tomcat del GW BOD. $NEW_LINE $NEW_LINE - bod.start (no probado): Inicia tomcat del GW BOD. $NEW_LINE $NEW_LINE - bod.gf.stop (no probado): Detiene motor de BOD. $NEW_LINE $NEW_LINE - bod.gf.start (no probado): Inicia motor de BOD"
 
                 record
 
@@ -426,16 +444,26 @@ commands()
 
                         CONTENCION=`curl -s $URL_UPDATE | jq '.result[0].message.text' | awk -F "_" '{print $2}' | tr -d '"'`
 
-                        if [[ $CONTENCION -le 100 ]] && [[ $CONTENCION -ge 0 ]]; then
+                        if [[ -z "$CONTENCION" ]]; then
 
-                                contencion1 $CONTENCION
-                                contencion2 $CONTENCION
+                                $SEND"Valor vacio en contencion"
 
-                                $SEND"Contencion del $CONTENCION% aplicada en ambos nodos"
+                                $CONTENCION=0
 
                         else
 
-                                $SEND"Contencion debe ser entre 0 y 100"
+                                if [[ $CONTENCION -le 100 ]] && [[ $CONTENCION -ge 0 ]]; then
+
+                                        contencion1 $CONTENCION
+                                        contencion2 $CONTENCION
+
+                                        $SEND"Contencion del $CONTENCION% aplicada en ambos nodos"
+
+                                else
+
+                                        $SEND"Contencion debe ser entre 0 y 100"
+
+                                fi
 
                         fi
 
@@ -699,86 +727,82 @@ commands()
 
                 ;;
 
-                engine.start)
+#               engine.start)
 
-                        $SEND"Levantando Motor"
+#                        $SEND"Levantando Motor"
 
-                        engine_start > /dev/null
-
-
-                        if [[ $(engine_status | grep not | wc -l) -eq 0 ]]; then
-
-                                $SEND"Motor online"
-
-                                local RESULT="Successful"
-
-                        else
-
-                                $SEND"Error al iniciar el motor"
-
-                                local RESULT="Failed"
-
-                        fi
-
-                        logEngineStart $WRITER $OPT $RESULT
-
-                        record
-
-                       ;;
+#                        engine_start
 
 
-                 engine.stop)
+ #                       if [[ $(engine_status | grep not | wc -l) -eq 0 ]]; then
 
-                        $SEND"Bajando Motor"
+#                                $SEND"Motor online"
 
-                        engine_stop > /dev/null 2>&1
+#                               local RESULT="Successful"
 
-#                        sleep 160
+ #                       else
 
-                        if [[ $? -eq 0 ]]; then
+  #                              $SEND"Error al iniciar el motor"
 
-                                if [[ $(engine_status | grep not | wc -l) -eq 0 ]]; then
+#                               local RESULT="Failed"
 
-                                        $SEND"Motor stopped"
+ #                       fi
 
-                                        $SEND"Esperando a que liberen las conexiones a la BD"
+#                       logEngineStart $WRITER $OPT $RESULT
 
-                                        CONEXIONES=1
+ #                       record
 
-                                        while [ $CONEXIONES -gt 0 ]; do
+  #                     ;;
 
-                                                if [[ $($SSH@$ENGINE sudo netstat -natp | grep 1521 | grep ESTABLISHED | wc -l) -eq 0 ]]; then
 
-                                                        break
+#                engine.stop)
 
-                                                else
+ #                       $SEND"Bajando Motor"
 
-                                                        CONEXIONES=1
+  #                      engine_stop > /dev/null 2>&1
 
-                                                        sleep 2
+   #                     sleep 40
 
-                                                fi
+#                        if [[ $(engine_status | grep not | wc -l) -eq 0 ]]; then
 
-                                        done
+#                               $SEND"Motor stopped"
 
-                                        $SEND"Conexiones a BD liberadas"
+#                               $SEND"Esperando a que liberen las conexiones a la BD"
 
-                                        local RESULT="Successful"
+#                               CONEXIONES=1
 
-                                else
+#                               while [ $CONEXIONES -gt 0 ]; do
 
-                                        $SEND"Error al detener el motor, intente nuevamente"
+#                                               if [[ $($SSH@$ENGINE sudo netstat -natp | grep 1521 | grep ESTABLISHED | wc -l) -eq 0 ]]; then
 
-                                        local RESULT="Failed"
+ #                                              break
 
-                                fi
+#                                       else
 
-                        fi
+#                                               CONEXIONES=1
 
-                                logEngineStop $WRITER $OPT $RESULT
+#                                               sleep 2
 
-                                record
-                ;;
+#                                       fi
+
+#                               done
+
+#                               $SEND"Conexiones a BD liberadas"
+
+#                               local RESULT="Successful"
+
+#                       else
+
+#                               $SEND"Error al detener el motor, intente nuevamente"
+
+#                               local RESULT="Failed"
+
+#                       fi
+
+#                               logEngineStop $WRITER $OPT $RESULT
+
+ #                              record
+#                ;;
 
 
                 status)
@@ -938,6 +962,51 @@ commands()
 
                 ;;
 
+                wifi.stop)
+
+                        $SEND"Deteniendo POS wifi Bicentenario"
+
+                        wifi_stop
+
+                        local PROCESS=`$SSH@$WIFI ps -ef | grep startup | grep -v grep | wc -l`
+
+                        if [[ $PROCESS -eq 0 ]]; then
+
+                                $SEND"POS wifi: stopped"
+
+                        else
+
+                                $SEND"POS wifi: online"
+
+                        fi
+
+                        record
+
+                ;;
+
+                wifi.start)
+
+                        $SEND"Iniciando POS wifi Bicentenario"
+
+                        wifi_start
+
+                        local PROCESS=`$SSH@$WIFI ps -ef | grep startup | grep -v grep | wc -l`
+
+                        if [[ $PROCESS -eq 1 ]]; then
+
+                                $SEND"POS wifi: online"
+
+                        else
+
+                                $SEND"POS wifi: stopped"
+
+                        fi
+
+                        record
+
+                ;;
+
+
                 sw1.stop)
 
                         integrator1_stop
@@ -1039,29 +1108,51 @@ commands()
 
                 line1.stop)
 
-                        local NAMES=("Nodo 1" "Sw 1")
+#                       local NAMES=("Nodo 1" "Sw 1")
 #                       local CMD=("node1_stop" "integrator1_stop")
-                        local CMD=("ssh -t -q agamez@172.28.111.42 sudo pm2 stop /opt/nodejs/api-gateway/bin/www –watch" "ssh -t -q agamez@172.28.111.44 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh stop")
+#                       local CMD=("ssh -t -q agamez@172.28.111.42 sudo pm2 stop /opt/nodejs/api-gateway/bin/www –watch" "ssh -t -q agamez@172.28.111.44 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh stop")
 
-                        local COUNT=0
+#                       local COUNT=0
 
-                        for i in ${NAMES[@]}; do
+#                       for i in ${NAMES[@]}; do
 
-                                $SEND"Deteniendo ${NAMES[$COUNT]}"
+#                               $SEND"Deteniendo ${NAMES[$COUNT]}"
 
-                                eval ${CMD[$COUNT]}
+#                               eval ${CMD[$COUNT]}
 
-                                if [[ $? -eq 0 ]]; then
+#                               if [[ $? -eq 0 ]]; then
 
-                                        $SEND"${NAMES[$COUNT]}: stopped"
+#                                       $SEND"${NAMES[$COUNT]}: stopped"
 
-                                else
+#                               else
 
-                                        $SEND"${NAMES[$COUNT]}: failed"
+#                                       $SEND"${NAMES[$COUNT]}: failed"
 
-                                fi
+#                               fi
 
-                        done
+#                       done
+
+                        $SEND"Bajando linea 1"
+
+                        node1_stop
+
+                        integrator1_stop
+
+                        sleep 5
+
+                        $SEND"Nodo 1: $($SSH@$NODE1 "sudo pm2 show 0 | grep status" | awk '{print $4}')"
+
+                        local PROCESS=`$SSH@$SW1 sudo ps -ef | grep integrator.sh | grep -v grep | wc -l`
+
+                        if [[ $PROCESS -eq 0 ]]; then
+
+                                $SEND"Sw 1: stopped"
+
+                        else
+
+                                $SEND"Sw 1: online"
+
+                        fi
 
                         record
 
@@ -1069,29 +1160,51 @@ commands()
 
                 line1.start)
 
-                        local NAMES=("Nodo 1" "Sw 1")
+#                        local NAMES=("Nodo 1" "Sw 1")
 #                        local CMD=("node1_start" "integrator1_start")
-                        local CMD=("ssh -t -q agamez@172.28.111.42 sudo pm2 start /opt/nodejs/api-gateway/bin/www –watch" "ssh -t -q agamez@172.28.111.44 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh start")
+#                       local CMD=("ssh -t -q agamez@172.28.111.42 sudo pm2 start /opt/nodejs/api-gateway/bin/www –watch" "ssh -t -q agamez@172.28.111.44 sudo /opt/wso2/wso2ei-6.3.0/bin/integrator.sh start")
 
-                        local COUNT=0
+#                        local COUNT=0
 
-                        for i in ${NAMES[@]}; do
+#                        for i in ${NAMES[@]}; do
 
-                                $SEND"Iniciando ${NAMES[$COUNT]}"
+#                               $SEND"Iniciando ${NAMES[$COUNT]}"
 
-                                eval ${CMD[$COUNT]}
+#                                eval ${CMD[$COUNT]}
 
-                                if [[ $? -eq 0 ]]; then
+#                                if [[ $? -eq 0 ]]; then
 
-                                        $SEND"${NAMES[$COUNT]}: started"
+#                                       $SEND"${NAMES[$COUNT]}: started"
 
-                                else
+#                                else
 
-                                        $SEND"${NAMES[$COUNT]}: failed"
+#                                        $SEND"${NAMES[$COUNT]}: failed"
 
-                                fi
+#                                fi
 
-                        done
+ #                       done
+
+                        $SEND"Levantando linea 1"
+
+                        node1_start
+
+                        integrator1_start
+
+                        sleep 5
+
+                        $SEND"Nodo 1: $($SSH@$NODE1 "sudo pm2 show 0 | grep status" | awk '{print $4}')"
+
+                        local PROCESS=`$SSH@$SW1 sudo ps -ef | grep integrator.sh | grep -v grep | wc -l`
+
+                        if [[ $PROCESS -ge 1 ]]; then
+
+                                $SEND"Sw 1: online"
+
+                        else
+
+                                $SEND"Sw 1: stopped"
+
+                        fi
 
                         record
 
@@ -1099,28 +1212,50 @@ commands()
 
                 line2.stop)
 
-                        local NAMES=("Nodo 2" "Sw 2")
-                        local CMD=("node2_stop" "integrator2_stop")
+#                        local NAMES=("Nodo 2" "Sw 2")
+#                        local CMD=("node2_stop" "integrator2_stop")
 
-                        local COUNT=0
+#                        local COUNT=0
 
-                        for i in ${NAMES[@]}; do
+#                        for i in ${NAMES[@]}; do
 
-                                $SEND"Deteniendo ${NAMES[$COUNT]}"
+#                                $SEND"Deteniendo ${NAMES[$COUNT]}"
 
-                                eval ${CMD[$COUNT]}
+#                                eval ${CMD[$COUNT]}
 
-                                if [[ $? -eq 0 ]]; then
+#                                if [[ $? -eq 0 ]]; then
 
-                                        $SEND"${NAMES[$COUNT]}: stopped"
+#                                        $SEND"${NAMES[$COUNT]}: stopped"
 
-                                else
+#                                else
 
-                                        $SEND"${NAMES[$COUNT]}: failed"
+#                                        $SEND"${NAMES[$COUNT]}: failed"
 
-                                fi
+#                                fi
 
-                        done
+#                        done
+
+                        $SEND"Bajando linea 2"
+
+                        node2_stop
+
+                        integrator2_stop
+
+                        sleep 5
+
+                        $SEND"Nodo 2: $($SSH@$NODE2 "sudo pm2 show 0 | grep status" | awk '{print $4}')"
+
+                        local PROCESS=`$SSH@$SW2 sudo ps -ef | grep integrator.sh | grep -v grep | wc -l`
+
+                        if [[ $PROCESS -eq 0 ]]; then
+
+                                $SEND"Sw 2: stopped"
+
+                        else
+
+                                $SEND"Sw 2: online"
+
+                        fi
 
                         record
 
@@ -1128,28 +1263,50 @@ commands()
 
                 line2.start)
 
-                        local NAMES=("Nodo 2" "Sw 2")
-                        local CMD=("nodo2_start" "integrator2_start")
+#                        local NAMES=("Nodo 2" "Sw 2")
+#                        local CMD=("nodo2_start" "integrator2_start")
 
-                        local COUNT=0
+#                        local COUNT=0
 
-                        for i in ${NAMES[@]}; do
+#                        for i in ${NAMES[@]}; do
 
-                                $SEND"Iniciando ${NAMES[$COUNT]}"
+#                                $SEND"Iniciando ${NAMES[$COUNT]}"
 
-                                eval ${CMD[$COUNT]}
+#                                eval ${CMD[$COUNT]}
 
-                                if [[ $? -eq 0 ]]; then
+#                                if [[ $? -eq 0 ]]; then
 
-                                        $SEND"${NAMES[$COUNT]}: started"
+#                                        $SEND"${NAMES[$COUNT]}: started"
 
-                                else
+#                                else
 
-                                        $SEND"${NAMES[$COUNT]}: failed"
+#                                        $SEND"${NAMES[$COUNT]}: failed"
 
-                                fi
+#                                fi
 
-                        done
+#                        done
+
+                        $SEND"Levantando linea 2"
+
+                        node2_start
+
+                        integrator2_start
+
+                        sleep 5
+
+                        $SEND"Nodo 2: $($SSH@$NODE2 "sudo pm2 show 0 | grep status" | awk '{print $4}')"
+
+                        local PROCESS=`$SSH@$SW2 sudo ps -ef | grep integrator.sh | grep -v grep | wc -l`
+
+                        if [[ $PROCESS -eq 1 ]]; then
+
+                                $SEND"Sw 2: online"
+
+                        else
+
+                                $SEND"Sw 2: stopped"
+
+                        fi
 
                         record
 
@@ -1157,28 +1314,58 @@ commands()
 
                 wso2.stop)
 
-                        local NAMES=("Sw 1" "Sw 2")
-                        local CMD=("integrator1_stop" "integrator2_stop")
+#                       local NAMES=("Sw 1" "Sw 2")
+#                        local CMD=("integrator1_stop" "integrator2_stop")
 
-                        local COUNT=0
+#                        local COUNT=0
 
-                        for i in ${NAMES[@]}; do
+#                        for i in ${NAMES[@]}; do
 
-                                $SEND"Deteniendo ${NAMES[$COUNT]}"
+#                                $SEND"Deteniendo ${NAMES[$COUNT]}"
 
-                                eval ${CMD[$COUNT]}
+#                                eval ${CMD[$COUNT]}
 
-                                if [[ $? -eq 0 ]]; then
+#                                if [[ $? -eq 0 ]]; then
 
-                                        $SEND"${NAMES[$COUNT]}: stopped"
+#                                        $SEND"${NAMES[$COUNT]}: stopped"
 
-                                else
+#                                else
 
-                                        $SEND"${NAMES[$COUNT]}: failed"
+#                                        $SEND"${NAMES[$COUNT]}: failed"
 
-                                fi
+#                                fi
 
-                        done
+#                        done
+
+                        $SEND"Deteniendo Wso2 en ambos nodos"
+
+                        integrator1_stop
+
+                        integrator2_stop
+
+                        local PROCESS1=`$SSH@$SW1 sudo ps -ef | grep integrator | grep -v grep | wc -l`
+
+                        local PROCESS2=`$SSH@$SW2 sudo ps -ef | grep integrator | grep -v grep | wc -l`
+
+                        if [[ $PROCESS1 -eq 0 ]]; then
+
+                                $SEND"Sw 1: stopped"
+
+                        else
+
+                                $SEND"Sw 1: online"
+
+                        fi
+
+                        if [[ $PROCESS2 -eq 0 ]]; then
+
+                                $SEND"Sw 2: stopped"
+
+                        else
+
+                                $SEND"Sw 2: online"
+
+                        fi
 
                         record
 
@@ -1186,30 +1373,346 @@ commands()
 
                 wso2.start)
 
-                        local NAMES=("Sw 1" "Sw 2")
-                        local CMD=("integrator1_start" "integrator2_start")
+#                        local NAMES=("Sw 1" "Sw 2")
+#                        local CMD=("integrator1_start" "integrator2_start")
 
-                        local COUNT=0
+#                        local COUNT=0
 
-                        for i in ${NAMES[@]}; do
+#                        for i in ${NAMES[@]}; do
 
-                                $SEND"Iniciando ${NAMES[$COUNT]}"
+#                                $SEND"Iniciando ${NAMES[$COUNT]}"
 
-                                eval ${CMD[$COUNT]}
+#                                eval ${CMD[$COUNT]}
 
-                                if [[ $? -eq 0 ]]; then
+#                                if [[ $? -eq 0 ]]; then
 
-                                        $SEND"${NAMES[$COUNT]}: started"
+#                                        $SEND"${NAMES[$COUNT]}: started"
+
+#                                else
+
+#                                        $SEND"${NAMES[$COUNT]}: failed"
+
+#                                fi
+
+#                        done
+
+                        $SEND"Iniciando Wso2 en ambos nodos"
+
+                        integrator1_start
+                        integrator2_start
+
+                        local PROCESS1=`$SSH@$SW1 sudo ps -ef | grep integrator -| grep -v grep | wc -l`
+                        local PROCESS2=`$SSH@$SW2 sudo ps -ef | grep integrator -| grep -v grep | wc -l`
+
+                        if [[ $PROCESS1 -eq 1 ]]; then
+
+                                $SEND"Sw 1: online"
+
+                        else
+
+                                $SEND"Sw 1: stopped"
+
+                        fi
+
+
+                        if [[ $PROCESS2 -eq 1 ]]; then
+
+                                $SEND"Sw 2: online"
+
+                        else
+
+                                $SEND"Sw 2: stopped"
+
+                        fi
+
+                        record
+
+                ;;
+
+                consult)
+
+                        local FECHA=`curl -s $URL_UPDATE | jq '.result[0].message.text' | awk -F "_" '{print $2}' | tr -d '"'`
+
+                        local SERVERS=("$NODE1" "$NODE2")
+
+                        local NAMES=("Nodo1" "Nodo2")
+
+                        local CONT=0;
+
+                        for i in ${SERVERS[@]}; do
+
+                                $SEND"${NAMES[$CONT]}:"
+
+                                local VAR=`$SSH@$i sudo grep $FECHA /usr/local/bin/noc/respaldos/diatx.txt | awk '{print $1}'`
+
+                                if [[ ! -z "$VAR" ]]; then
+
+                                        local LINE=`$SSH@$i sudo grep $FECHA /usr/local/bin/noc/respaldos/diatx.txt | tr -d '\r'`
+
+                                        $SEND"$LINE"
+
+                                        CONT=`expr $CONT + 1`
 
                                 else
 
-                                        $SEND"${NAMES[$COUNT]}: failed"
+                                        $SEND"Fecha invalida o no se encuentra en el registro"
 
                                 fi
 
-                        done
+                        done;
 
                         record
+
+                ;;
+
+                bod.status)
+
+                        local TIME=`$SSH@$BOD_GW sudo grep -a compra $LOG_BOD | tail -20 | awk '{print $14}' | awk '{$sum+=$0}END{printf ("%.2f", ($sum/NR))}'`
+
+                        local TIME_GF=`$SSH@$BOD_MOTOR sudo grep -a procesador $LOG_BOD_GF | tail -20 | awk '{print $12}' | awk '{$sum+=$0}END{printf ("%.2f", ($sum/NR))}'`
+
+                        local TIME_MOTOR=`$SSH@$BOD_MOTOR sudo grep -a motor $LOG_BOD_GF | tail -20 | awk '{print $12}' | awk '{$sum+=$0}END{printf ("%.2f", ($sum/NR))}'`
+
+                        $SEND"Compra: $TIME seg $NEW_LINE BOD: $TIME_GF seg $NEW_LINE Motor: $TIME_MOTOR seg"
+
+                        record
+
+                ;;
+
+                bod.tx)
+
+                        local HOUR=`date "+%H"`
+
+                        if [[ $HOUR -lt 9 ]] || [[ $HOUR -gt 19 ]]; then
+
+                                $SEND"Espere 60 segundos"
+
+                                local FECHA_TX1=`$SSH@$BOD_GW sudo grep -a compra $LOG_BOD | tac | awk 'NR==1{print $1,$2}'`
+
+                                sleep 60
+
+                                local FECHA_TX2=`$SSH@$BOD_GW sudo grep -a compra $LOG_BOD | tac | awk 'NR==1{print $1,$2}'`
+
+                                if [[ $FECHA_TX2 > $FECHA_TX1 ]]; then
+
+                                        $SEND"POS BOD transando"
+
+                                else
+
+                                        $SEND"No están transando"
+
+                                fi
+
+                        else
+
+                                $SEND"Espere 20 segundos"
+
+                                local FECHA_TX1=`$SSH@$BOD_GW sudo grep -a compra $LOG_BOD | tac | awk 'NR==1{print $1,$2}'`
+
+                                sleep 20
+
+                                local FECHA_TX2=`$SSH@$BOD_GW sudo grep -a compra $LOG_BOD | tac | awk 'NR==1{print $1,$2}'`
+
+                                if [[ $FECHA_TX2 > $FECHA_TX1 ]]; then
+
+                                        $SEND"POS BOD transando"
+
+                                else
+
+                                        $SEND"No están transando"
+
+                                fi
+
+                        fi
+
+                        record
+
+                ;;
+
+                bod.platform)
+
+                        local TOM=`$SSH@$BOD_GW sudo ps -ef | grep java | grep -v grep | wc -l`
+
+                        local MOTOR_PROCESS=`$SSH@$BOD_MOTOR sudo ps -ef | grep glassfish | grep -v grep | wc -l`
+
+                        local MOTOR_DOMAIN=`bod_gf_status | grep not | wc -l`
+
+                        if [[ $TOM -eq 1 ]]; then
+
+                                $SEND"Tomcat Online"
+
+                        else
+
+                                $SEND"Tomcat Offline"
+
+                        fi
+
+                        if [[ $MOTOR_PROCESS -eq 1 ]]; then
+
+                                $SEND"Proceso GF Online"
+
+                        else
+
+                                $SEND"Proceso GF Offline"
+
+                        fi
+
+                        if [[ $MOTOR_DOMAIN -eq 1 ]]; then
+
+                                $SEND"Dominio GF Offline"
+
+                        else
+
+                                $SEND"Dominio GF Online"
+
+                        fi
+
+                        record
+
+                ;;
+
+                bod.stop)
+
+                        if [[ `$SSH@$BOD_GW sudo ps -ef | grep "java" | grep -v grep | wc -l` -eq 1 ]]; then
+
+                                $SEND"Deteniendo POS BOD"
+
+                                bod_stop
+
+                                if [[ $? -eq 0 ]]; then
+
+                                        $SEND"POS BOD detenidos"
+
+                                else
+
+                                        $SEND"Error al detener servicio"
+
+                                fi
+
+                        else
+
+                                $SEND"El servicio no se encuentra arriba"
+
+                        fi
+
+                        record
+
+                ;;
+
+                bod.start)
+
+                        local GW_PROCESS=`$SSH@$BOD_GW sudo ps -ef | grep "java" | grep -v grep | wc -l`
+
+                        if [[ $GW_PROCESS -eq 1 ]]; then
+
+                                $SEND"Servicio ya se encuentra arriba"
+
+                        elif [[ $GW_PROCESS -lt 1 ]]; then
+
+                                $SEND"Levantando servicio"
+
+                                bod_start
+
+                                if [[ $? -eq 0 ]]; then
+
+                                        $SEND"Servicio arriba"
+
+                                else
+
+                                        $SEND"Error al levantar el servicio"
+
+                                fi
+
+                        fi
+
+                        record
+
+                ;;
+
+
+                bod.gf.stop)
+
+                        local MOTOR_PROCESS=`$SSH@$BOD_MOTOR sudo ps -ef | grep glassfish | grep -v grep | wc -l`
+
+                        local MOTOR_STATUS=`bod_gf_status | grep not | wc -l`
+
+                        if [[ $MOTOR_STATUS -eq 0 ]] && [[ $MOTOR_PROCESS -eq 1 ]]; then
+
+                                $SEND"Deteniendo motor"
+
+                                bod_gf_stop > /dev/null
+
+                                sleep 10
+
+                                if [[ $MOTOR_PROCESS -eq 1 ]] || [[ $MOTOR_STATUS -eq 0 ]]; then
+
+                                        $SEND"No se detuvo correctamente el motor"
+                                        $SEND"Intente nuevamente"
+
+                                elif [[ $MOTOR_PROCESS -eq 0 ]] && [[ $MOTOR_STATUS -eq 1 ]]; then
+
+                                        $SEND"Se detuvo completamente el motor"
+
+                                else
+
+                                        $SEND"No se detuvo correctamente el motor"
+
+                                        $SEND"Intente nuevamente"
+
+                                fi
+
+                        elif [[ $MOTOR_STATUS -eq 1 ]] && [[ $MOTOR_PROCESS -eq 0 ]]; then
+
+
+                                $SEND"Motor ya se encuentra detenido"
+
+                        else
+
+                                $SEND"Valide estatus del motor"
+
+                        fi
+
+                record
+
+
+                ;;
+
+                bod_gf_start)
+
+                        local MOTOR_PROCESS=`$SSH@$BOD_MOTOR sudo ps -ef | grep glassfish | grep -v grep | wc -l`
+
+                        local MOTOR_STATUS=`bod_gf_status | grep not | wc -l`
+
+                        if [[ $MOTOR_PROCESS -eq 0 ]] && [[ $MOTOR_STATUS -eq 1 ]]; then
+
+                                $SEND"Levantando motor"
+
+                                bod_gf_start > /dev/null
+
+                                sleep 10
+
+                                        if [[ $MOTOR_PROCESS -eq 1 ]] && [[ $MOTOR_STATUS -eq 0 ]]; then
+
+                                                $SEND"Motor iniciado exitosamente"
+
+                                        else
+
+                                                $SEND"No inicio correctamente el motor"
+                                                $SEND"Intente nuevamente"
+
+                                        fi
+
+
+                        elif [[ $MOTOR_PROCESS -eq 1 ]] && [[ $MOTOR_STATUS -eq 0 ]]; then
+
+
+                                $SEND"Motor ya se encuentra arriba"
+
+                        else
+
+                                $SEND"Valide estatus del motor"
+
+                        fi
 
                 ;;
 
@@ -1233,4 +1736,5 @@ record;
 authentication;
 token;
 commands;
+
 
